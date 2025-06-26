@@ -1,4 +1,3 @@
-````markdown
 # WebUI Playwright Test Automation
 
 This repository contains Playwright code to test EN_MEDICAL.
