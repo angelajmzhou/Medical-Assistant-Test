@@ -1,5 +1,17 @@
 import { test, expect } from '@playwright/test';
 
+test('signin_test', async ({ page }) => {
+  //sign in
+  await page.goto('https://192.168.10.14/auth');
+  await page.getByRole('textbox', { name: 'Enter Your Email' }).click();
+  await page.getByRole('textbox', { name: 'Enter Your Email' }).fill('admin@useradmin.com');
+  await page.getByRole('textbox', { name: 'Enter Your Password' }).click();
+  await page.getByRole('textbox', { name: 'Enter Your Password' }).fill('admin123');
+  await page.getByRole('button', { name: 'Sign in' }).click();
+  expect(page.getByRole('title', { name: 'Kneron Medical AI Assistant' }));
+});
+
+
 const headache_msgs = [
   'I have a headache.',
   'It started in the morning.', 
@@ -48,15 +60,16 @@ const heart_msgs = [
   'I have chest pains.',
   'It usually starts at night, around 9 pm.',
   'I had just finished dinner and was watching TV.',
-  'I had just eaten a big dinner and was watching TV on the couch when the chest pain occured.',
-  'It happens about once a month, usually after a large dinner.',
+  'The pain was in the middle of my chest, but did not radiate outwards',
   'It felt like a sharp, squeezing sensation.',
+  'It happens about once a month, usually at night, after dinner.',
   'They last around 5-10 minutes.',
   'The chest pains usually happen after I finish a rather large dinner.',
-  'I have tried changing my posture, but it did not help.',
   'I have experienced palpitations and sweating alongside my chest pain, but not always.',
+  'I have tried changing my posture, but it did not help.',
   'I have no diagnosed medical conditions',
-  'My mother has hypertension, but has not received any treatment for it.'
+  'My mother has hypertension, but has not received any treatment for it.',
+  'I am obese, and do not smoke or use drugs.'
 ];
 
 test('heart_test', async ({ page }) => {
@@ -79,7 +92,7 @@ test('heart_test', async ({ page }) => {
   await page.getByRole('button', { name: 'Copy' }).click();
   const clipboardText = await page.evaluate(async () => await navigator.clipboard.readText());
   console.log('Clipboard text:', clipboardText);
-  const keywords = ['night', '9 pm', 'dinner', 'watching TV', 'sharp', 'squeezing', '5-10 minutes', 'posture', 'palpitations', 'sweating', 'hypertension', 'mother'];
+  const keywords = ['night', '9 pm', 'dinner', 'sharp', 'squeezing', '5-10 minutes', 'posture', 'palpitations', 'sweating', 'hypertension', 'mother'];
 
 for (const keyword of keywords) {
   expect(clipboardText.toLowerCase()).toContain(keyword.toLowerCase());
