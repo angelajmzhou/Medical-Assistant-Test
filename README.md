@@ -78,7 +78,8 @@ DEBUG=pw:browser* npx playwright test
 
 1. Open the full project folder (where `playwright.config.ts` is at root).
 2. Install the **Playwright Test for VSCode** extension.
-3. Open the Playwright sidebar to run/debug tests.
+3. Run `>Test: Install Playwright` from the command palette.
+4. Open the Playwright sidebar to run/debug tests.
 
 
 ## 📁 File Structure
