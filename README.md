@@ -1,6 +1,6 @@
 # WebUI Playwright Test Automation
 
-This repository contains Playwright code to test EN_MEDICAL.
+This repository contains Playwright code to test Medical Chatbot.
 
 ## Prerequisites
 
@@ -15,7 +15,7 @@ This repository contains Playwright code to test EN_MEDICAL.
 * npm: bundled with Node.js
 * Playwright: `@playwright/test@1.39.0`
 * Browser: Google Chrome (via `channel: 'chrome'`)
-* OS: macOS (tested on Intel-based MacBook)
+* OS: macOS
 
 
 ## Installation
