@@ -8,8 +8,9 @@ test('signin_test', async ({ page }) => {
   await page.getByRole('textbox', { name: 'Enter Your Password' }).click();
   await page.getByRole('textbox', { name: 'Enter Your Password' }).fill('admin123');
   await page.getByRole('button', { name: 'Sign in' }).click();
-  expect(page.getByRole('title', { name: 'Kneron Medical AI Assistant' }));
+  expect(page.getByRole('banner', { name: 'Kneron Medical AI Assistant' }));
 });
+
 
 
 const headache_msgs = [
@@ -90,6 +91,7 @@ test('heart_test', async ({ page }) => {
   await page.locator('.flex.justify-between.mt-1\\.5').click();
   await page.getByRole('button', { name: 'Copy' }).click();
   await page.getByRole('button', { name: 'Copy' }).click();
+  //const clipboardText = await page.evaluate(async () => await navigator.clipboard.readText());
   const clipboardText = await page.evaluate(async () => await navigator.clipboard.readText());
   console.log('Clipboard text:', clipboardText);
   const keywords = ['night', '9 pm', 'dinner', 'sharp', 'squeezing', '5-10 minutes', 'posture', 'palpitations', 'sweating', 'hypertension', 'mother'];
@@ -98,3 +100,50 @@ for (const keyword of keywords) {
   expect(clipboardText.toLowerCase()).toContain(keyword.toLowerCase());
 }
 });
+
+const nonsense_msgs = [
+  'I don\'t feel well.',
+  'The sky is blue',
+  'I am not happy.',
+  'Sjfa;ewoifjlkdf;gseflkajweivdflfs',
+  'AaaAAAaaa'
+]
+const valid_responses = [
+  'Sorry, it seems like you didn’t accurately describe your health issue. Could you please provide more details about any symptoms or concerns you currently have? Thank you!',
+  'Sorry, the health issue you mentioned is not yet recorded in our current diagnostic database. We are aware of it and will update soon. Please contact our agent for consultation service. Thank you for your understanding!',
+]
+test('invalid_msgs', async ({ page }) => {
+  // Recording.
+  await page.goto('https://192.168.10.14/');
+  await page.getByRole('textbox', { name: 'Enter Your Email' }).fill('admin@useradmin.com');
+  await page.getByRole('textbox', { name: 'Enter Your Password' }).fill('admin123');
+  await page.getByRole('textbox', { name: 'Enter Your Password' }).press('Enter');
+  await page.getByRole('button', { name: 'Sign in' }).click();
+
+  for (const [i, msg] of nonsense_msgs.entries()) {
+    console.log(`Sending message ${i+1}: ${msg}`);
+    await page.locator('#chat-input').fill(msg);
+    await page.locator('#send-message-button').click();
+    const paragraphText = await page.getByRole('paragraph').filter({ hasText: /.+/ }).nth(2*(i+1)).textContent();
+    expect(valid_responses).toContain(paragraphText?.trim());
+  }
+});
+
+test('new_user', async ({ page }) => {
+  await page.goto('https://192.168.10.14/');
+  await page.getByRole('button', { name: 'Sign up' }).click();
+  await page.getByRole('textbox', { name: 'Enter Your Full Name' }).fill('Test');
+  await page.getByRole('textbox', { name: 'Enter Your Email' }).fill('test@user.com');
+  await page.getByRole('textbox', { name: 'Enter Your Password' }).fill('test');
+  await page.getByRole('button', { name: 'Create Account' }).click();
+  await page.getByRole('button', { name: 'Sign in' }).click();
+  await page.getByRole('button', { name: 'Sign in' }).click();await page.getByRole('button', { name: 'Sign in' }).click();
+  await page.getByRole('button', { name: 'Sign in' }).click();
+  await page.getByLabel('User Menu').click();
+  await page.getByRole('button', { name: 'Settings' }).click();
+  await page.getByRole('button', { name: 'Account' }).click();
+  await page.locator('input[type="text"]').fill('New Test');
+  await page.getByRole('button', { name: 'Save' }).click();
+  await expect(page.locator('input[type="text"]')).toHaveValue('New Test');
+});
+
